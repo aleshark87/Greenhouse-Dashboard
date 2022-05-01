@@ -3,23 +3,34 @@ import {ajaxRequest} from './AjaxRequests.js'
 import {standardHeader} from './ConnectionParams.js';
 
 let api_uri = 'http://localhost:8080/api/2/things/';
-let thing_id = 'com.project.thesis:greenhouse01';
+let thing_id;
 let thingTD;
-let features;   
-export let featuresEP;
-export let thingEP;
+let featuresTD = [];   
 
-export async function retrieveThingTD(){
+async function retrieveThingTD(){
     let uri = api_uri + thing_id;
     thingTD = await ajaxRequest(uri, 'GET', standardHeader);
 }
 
-export function resolveFeatures(){
-    const linkArray = JSONPath({ path: '$.links', thingTD })[0];
+async function retrieveFeaturesTD(){
+    const linkArray = JSONPath({ path: '$.links' , json: thingTD })[0];
     //0 is a "type" link
     for (var i = 1; i < linkArray.length; i++) {
         let json = linkArray[i];
-        const href = JSONPath({ path: '$.href', json });
-        console.log(href);
+        const featureHref = JSONPath({ path: '$.href', json: json });
+        let uri = api_uri + thing_id + featureHref;
+        let featureTD = await ajaxRequest(uri, 'GET', standardHeader);
+        featuresTD.push(featureTD);
     }
 }
+
+export async function init(thingId){
+    thing_id = thingId;
+    await retrieveThingTD();
+    await retrieveFeaturesTD();
+}
+
+export function getFeaturesTD(){
+    return featuresTD;
+}
+
