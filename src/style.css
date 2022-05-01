@@ -1,0 +1,29 @@
+.header-text {
+  font-size: 25px;
+  padding: 5px;
+  color: #fff;
+  text-decoration: none;
+}
+
+header i {
+  font-size: 30px;
+  color: #fff;
+}
+
+.topbar-button { 
+  background-color: transparent;
+  border-width: 0px;
+}
+
+@media (max-width: 992px) {
+  .desktop {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobile {
+    display: none;
+  }
+}
+
