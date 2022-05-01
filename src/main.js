@@ -1,14 +1,22 @@
 import * as ThingDescription from './js-modules/ThingDescription.js'
-import {ajaxRequest} from './js-modules/AjaxRequests.js'
+import {setSSEFeatures} from './js-modules/EventsSSE.js';
 
-const thing_id = 'com.project.thesis:greenhouse01';
-var source = new EventSource('http://localhost:8080/api/2/things/' + thing_id, { withCredentials: true });
-source.onmessage = function (event) {
-  console.log(event);
-};
+//"http://localhost:8080/api/2/things/com.project.thesis:greenhouse01" thingBASE
+//"http://localhost:8080/api/2/things/com.project.thesis:greenhouse01/features/temperature" featureBASE
+//"/properties/value" propertyHREF
 
-//await ThingDescription.init(thing_id);
-//console.log(ThingDescription.getFeaturesTD());
+await ThingDescription.init();
+ThingDescription.getFeaturesObserve();
+
+$(document).ready(function() {
+  setSSEFeatures();
+});
+
+
+
+
+
+
 
 
 
