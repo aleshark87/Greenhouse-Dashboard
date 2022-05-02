@@ -1,16 +1,25 @@
 import * as ThingDescription from './js-modules/ThingDescription.js'
 import {setSSEFeatures} from './js-modules/EventsSSE.js';
 
-//"http://localhost:8080/api/2/things/com.project.thesis:greenhouse01" thingBASE
-//"http://localhost:8080/api/2/things/com.project.thesis:greenhouse01/features/temperature" featureBASE
-//"/properties/value" propertyHREF
-
 await ThingDescription.init();
-ThingDescription.getFeaturesObserve();
-
+let featureProperties = await ThingDescription.retrieveFeaturesProperties();
+//console.log(properties);
 $(document).ready(function() {
-  setSSEFeatures();
+  createStatusList();
+  //setSSEFeatures();
 });
+
+function createStatusList(){
+  for( let[featureName, value] of featureProperties){
+    let liItem = '<li class="' + featureName + '">';
+    let hItem = '<h4>' + featureName + '</h4>'
+    liItem += hItem;
+    let pItem = '<p id="' + featureName + 'Status">' + value + '</p>';
+    liItem += pItem;
+    liItem += '</li>'
+    $('#status').append(liItem);
+  }
+}
 
 
 
