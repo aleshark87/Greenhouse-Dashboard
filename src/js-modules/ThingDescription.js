@@ -39,6 +39,35 @@ export async function retrieveFeaturesProperties(){
     return featureProperties;
 }
 
+export function retrieveActionsEndpoints(){
+    let actionEP = new Map();
+    const thingBaseUri = JSONPath({ path: '$.base', json:thingTD });
+    const actionsBaseUri = JSONPath({ path: '$.actions..forms[0].href', json:thingTD });
+    const actionSize = JSONPath({ path: '$.length', json:actionsBaseUri });
+    for(let i = 0; i < actionSize; i++){
+        let path = '$[' + i + ']';
+        let actionName = JSONPath({ path: path, json:actionsBaseUri }).toString()
+                            .split("messages/")[1]
+                            .split('{?timeout,response-required}')[0];
+        let actionUri = JSONPath({ path: path, json:actionsBaseUri }).toString();
+        const uri = explodeURIActions(thingBaseUri + actionUri);
+        actionEP.set(actionName, uri);
+    }
+    return actionEP;
+}
+
+export function retrieveSSEPropertiesEndpoints(){
+    let ssePropertiesEP = new Map();
+    for(const featureTD of featuresTD){
+        const featureName = JSONPath({ path: '$.id', json:featureTD }).toString().split('features/')[1];
+        const featureBaseUri = JSONPath({ path: '$.base', json:featureTD });
+        const hrefProperties = JSONPath({ path: '$.forms[4].href', json:featureTD });
+        const uri = featureBaseUri + hrefProperties;
+        ssePropertiesEP.set(featureName, uri);
+    }
+    return ssePropertiesEP;
+}
+
 function getFeaturesRead(){
     let featuresReadEP = new Map();
     for (const featureTD of featuresTD) {
@@ -46,13 +75,13 @@ function getFeaturesRead(){
         const featureBaseUri = JSONPath({ path: '$.base', json:featureTD });
         const hrefProperties = JSONPath({ path: '$.forms[0].href', json:featureTD });
         const uri = featureBaseUri + hrefProperties;
-        const explodedURI = explodeURI(uri);
+        const explodedURI = explodeURIFeatures(uri);
         featuresReadEP.set(featureName, explodedURI);
     }
     return featuresReadEP;
 }
 
-function explodeURI(uriToExplode){
+function explodeURIFeatures(uriToExplode){
     const uriTemplate = parseTemplate(uriToExplode);
     const explodedURI = uriTemplate.expand({
         channel: 'twin',
@@ -61,8 +90,12 @@ function explodeURI(uriToExplode){
     return explodedURI;
 }
 
-export function getFeaturesObserve(){
-    //console.log(thingTD);
-    console.log(featuresTD);
+function explodeURIActions(uriToExplode){
+    const uriTemplate = parseTemplate(uriToExplode);
+    const explodedURI = uriTemplate.expand({
+        'response-required': 'false',
+        timeout: 0
+    });
+    return explodedURI;
 }
 
