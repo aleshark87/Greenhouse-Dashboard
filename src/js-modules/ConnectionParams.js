@@ -17,3 +17,9 @@ export const standardHeader = {
     'accept': 'application/json',
     'Authorization': 'Basic ZGl0dG86ZGl0dG8='
 };
+
+export const headerPostMessage = {
+    'Authorization': 'Basic ZGl0dG86ZGl0dG8=',
+    'accept': '*/*',
+    'Content-Type': 'application/json'
+};

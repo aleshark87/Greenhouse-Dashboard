@@ -40,18 +40,15 @@ export async function retrieveFeaturesProperties(){
 }
 
 export function retrieveActionsEndpoints(){
-    let actionEP = new Map();
+    let actionEP = [];
     const thingBaseUri = JSONPath({ path: '$.base', json:thingTD });
     const actionsBaseUri = JSONPath({ path: '$.actions..forms[0].href', json:thingTD });
     const actionSize = JSONPath({ path: '$.length', json:actionsBaseUri });
     for(let i = 0; i < actionSize; i++){
         let path = '$[' + i + ']';
-        let actionName = JSONPath({ path: path, json:actionsBaseUri }).toString()
-                            .split("messages/")[1]
-                            .split('{?timeout,response-required}')[0];
         let actionUri = JSONPath({ path: path, json:actionsBaseUri }).toString();
         const uri = explodeURIActions(thingBaseUri + actionUri);
-        actionEP.set(actionName, uri);
+        actionEP.push(uri);
     }
     return actionEP;
 }
