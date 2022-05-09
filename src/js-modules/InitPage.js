@@ -26,6 +26,7 @@ export function createStatusList(featureProperties){
 * I can't create action page completely blind about what they do. 
 */
 export function createActionList(actionEP){
+  //console.log(actionEP);
   for(let action of actionEP){
     $('#switchOn').click(function(){
       let jsonData = '"ON"'
