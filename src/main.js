@@ -1,6 +1,6 @@
 import * as ThingDescription from './js-modules/ThingDescription.js'
 import {setSSEFeatures} from './js-modules/EventsSSE.js';
-import {createStatusList, createActionList, createEventList} from './js-modules/InitPage.js'
+import {createStatusList, createActionList} from './js-modules/InitPage.js'
 import {openWebSocket} from './js-modules/WebSocket.js'
 
 await ThingDescription.init();

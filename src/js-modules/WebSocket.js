@@ -30,6 +30,7 @@ export function openWebSocket() {
     }
     if(eventsAck == true && message.data != 'START-SEND-MESSAGES:ACK'){
       let json = JSON.parse(message.data);
+      //TODO with Thing Description
       if(json.path == '/outbox/messages/high-temperature'){
         $('#eventParagraph').text(JSON.stringify(json.value));
       }
